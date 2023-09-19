@@ -79,6 +79,7 @@ class Nim():
                 if not state in queue:
                     queue.append(state)
 
+        G.calculate_g_function()
         return G
 
 if __name__ == '__main__':
@@ -86,6 +87,19 @@ if __name__ == '__main__':
     game.print_game()
 
     game_graph = game.generate_graph()
+
     game_graph.print_graph()
+
+    P = []
+    N = []
+
+    for v in game_graph.vertices:
+        if game_graph.g_function[v] == 0:
+            P.append(v)
+        else:
+            N.append(v)
+
+    print(sorted(P))
+    print(sorted(N))
 
 
