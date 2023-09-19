@@ -66,6 +66,35 @@ class Graph():
                 for v in G_rev.vertices[current_v]:
                     queue.append(v)
 
+    def DFS(self, vertices, visited=-1, t=-1, first=-1, last=-1):
+        if visited == -1 or t == -1 or first == -1 or last == -1:
+            visited = {}
+            first = {}
+            last = {}
+            t = 0
+            for v in self.vertices:
+                visited[v] = 0
+                first[v] = 0
+                last[v] = 0
+            
+        if len(vertices) == 1:
+            vertex = vertices[0]
+            t = t + 1
+            first[vertex] = t
+            visited[vertex] = 1
+            for v in self.vertices[vertex]:
+                if visited[v] == 0:
+                    [visited, t, first, last] = self.DFS([v], visited, t, first, last)
+
+            t = t + 1
+            last[vertex] = t
+
+        else:
+            for v in vertices:
+                if visited[v] == 0:
+                    [visited, t, first, last] = self.DFS([v], visited, t, first, last)
+
+        return [visited, t, first, last]
 if __name__ == '__main__':
     G = Graph()
 
@@ -80,4 +109,6 @@ if __name__ == '__main__':
     G.calculate_g_function()
 
     G.print_graph()
+
+    print(G.DFS(G.vertices))
 
