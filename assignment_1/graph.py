@@ -41,30 +41,50 @@ class Graph():
         queue = []
         G_rev = self.reverse_graph()
 
-        for v in self.vertices:
+        [_, _, _, last] = G_rev.DFS(G_rev.vertices)
+
+        print(last)
+
+        top_order = [value[0] for value in sorted(last.items(), key=lambda item: item[1], reverse=True)]
+
+        print(top_order)
+
+        for v in top_order:
             if self.vertices[v] == []:
                 self.g_function[v] = 0
-                queue.append(v)
-
-        while queue:
-            print(queue)
-            current_v = queue.pop(0)
-            
-            values = []
-            
-            for v in self.vertices[current_v]:
-                value = self.g_function[v]
-                if value == -1:
-                    queue.append(v)
-                values.append(value)
-
-            if -1 in values:
-                queue.append(current_v)
-
             else:
-                self.g_function[current_v] = mex(values)
-                for v in G_rev.vertices[current_v]:
-                    queue.append(v)
+                values = []
+                for neighbor in self.vertices[v]:
+                    values.append(self.g_function[neighbor])
+                self.g_function[v] = mex(values)
+        
+
+
+#
+#        for v in self.vertices:
+#            if self.vertices[v] == []:
+#                self.g_function[v] = 0
+#                queue.append(v)
+#
+#        while queue:
+#            print(queue)
+#            current_v = queue.pop(0)
+#            
+#            values = []
+#            
+#            for v in self.vertices[current_v]:
+#                value = self.g_function[v]
+#                if value == -1:
+#                    queue.append(v)
+#                values.append(value)
+#
+#            if -1 in values:
+#                queue.append(current_v)
+#
+#            else:
+#                self.g_function[current_v] = mex(values)
+#                for v in G_rev.vertices[current_v]:
+#                    queue.append(v)
 
     def DFS(self, vertices, visited=-1, t=-1, first=-1, last=-1):
         if visited == -1 or t == -1 or first == -1 or last == -1:
@@ -103,6 +123,7 @@ if __name__ == '__main__':
     G.add_edge(1, 2)
     G.add_edge(2, 3)
     G.add_edge(3, 4)
+    G.add_edge(2,5)
 
     G.print_graph()
 
@@ -110,5 +131,5 @@ if __name__ == '__main__':
 
     G.print_graph()
 
-    print(G.DFS(G.vertices))
+    #print(G.DFS(G.vertices))
 
