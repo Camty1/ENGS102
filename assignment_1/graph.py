@@ -1,3 +1,6 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+
 def mex(values):
     i = 0
     while i in values:
@@ -9,6 +12,8 @@ class Graph():
     def __init__(self):
         self.vertices = dict()
         self.g_function = dict()
+        self.P = []
+        self.N = []
 
     def add_vertex(self, vertex):
         if not vertex in self.vertices:
@@ -83,6 +88,46 @@ class Graph():
                     [visited, t, first, last] = self.DFS([v], visited, t, first, last)
 
         return [visited, t, first, last]
+    
+    def get_P_and_N_positions(self):
+
+        self.P = []
+        self.N = []
+
+        for vertex in self.vertices:
+            if self.g_function[vertex] == 0:
+                self.P.append(vertex)
+            else:
+                self.N.append(vertex)
+
+
+    def visualize(self, start=-1):
+        edge_list = []
+
+        for vertex in self.vertices:
+            for neighbor in self.vertices[vertex]:
+                edge_list.append([vertex, neighbor])
+        
+        if not (self.P and self.N):
+            self.get_P_and_N_positions()
+
+        node_colors = {}
+        node_edge_colors = {}
+        for v in self.P:
+            node_colors[v] = 'red'
+            node_edge_colors[v] = 'gray'
+        for v in self.N:
+            node_colors[v] = 'blue'
+            node_edge_colors[v] = 'gray'
+        
+        if start != -1:
+            node_edge_colors[start] = 'green'
+
+        G = nx.DiGraph()
+        G.add_edges_from(edge_list)
+        nx.draw(G, pos=nx.spring_layout(G), node_color=[node_colors.get(node, 'gray') for node in G.nodes()], with_labels=True)
+        plt.show()
+
 if __name__ == '__main__':
     G = Graph()
 
@@ -96,5 +141,7 @@ if __name__ == '__main__':
     G.calculate_g_function()
 
     G.print_graph()
+
+    G.visualize()
 
 

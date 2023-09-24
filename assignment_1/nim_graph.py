@@ -68,7 +68,9 @@ class Nim():
     def generate_graph(self):
         G = Graph()
         queue = []
+        visited = set()
         queue.append(self.piles)
+        visited.add(self.piles)
 
         while queue:
             front_of_queue = queue.pop(0)
@@ -76,30 +78,192 @@ class Nim():
             
             for state in next_states:
                 G.add_edge(front_of_queue, state)
-                if not state in queue:
+                if not state in visited:
                     queue.append(state)
+                    visited.add(state)
 
         G.calculate_g_function()
         return G
 
+class Kayles():
+
+    def __init__(self, num_pins):
+        
+        self.num_pins = num_pins
+        self.pins = []
+        for i in range(num_pins):
+            self.pins.append(1)
+
+        self.pins = tuple(self.pins)
+        self.current_state = self.pins
+
+    def get_next_states(self, state=-1):
+        if state == -1:
+            state = self.current_state
+
+        next_states = set()
+        state = list(state) 
+        for i in range(self.num_pins-1):
+            if state[i] == 1:
+                new_state = state[:]
+                new_state[i] = 0
+                next_states.add(tuple(new_state))
+                if state[i+1] == 1:
+                    new_state[i+1] = 0
+                    next_states.add(tuple(new_state))
+
+        if state[-1] == 1:
+            new_state = state[:]
+            new_state[-1] = 0
+            next_states.add(tuple(new_state))
+
+        return next_states
+
+    def print_game(self):
+        print("Num pins:", str(self.num_pins))
+        print(str(self.pins))
+
+    def generate_graph(self):
+        G = Graph()
+        queue = []
+        visited = set()
+        queue.append(self.pins)
+        visited.add(self.pins)
+
+        while queue:
+            current_state = queue.pop(0)
+            next_states = self.get_next_states(current_state)
+
+            for s in next_states:
+                G.add_edge(current_state, s)
+                if not s in visited:
+                    queue.append(s)
+                    visited.add(s)
+        
+        G.calculate_g_function()
+        return G
+
+class Dawson():
+
+    def __init__(self, num_boxes):
+
+        self.num_boxes = num_boxes
+        self.boxes = []
+
+        for i in range(num_boxes):
+            self.boxes.append(1)
+
+        self.boxes = tuple(self.boxes)
+        self.current_state = self.boxes
+
+    def get_next_states(self, state=-1):
+        if state == -1:
+            state = self.current_state
+
+        next_states = set()
+        state = list(state)
+        for i in range(self.num_boxes):
+            if state[i] == 1:
+                new_state = state[:]
+                new_state[i] = 0
+                if i > 0:
+                    new_state[i-1] = 0
+                if i < self.num_boxes - 1:
+                    new_state[i+1] = 0
+                next_states.add(tuple(new_state))
+
+        return next_states
+    
+    def generate_graph(self):
+        G = Graph()
+        queue = []
+        visited = set()
+        queue.append(self.boxes)
+        visited.add(self.boxes)
+
+        while queue:
+            current_state = queue.pop(0)
+            next_states = self.get_next_states(current_state)
+
+            for s in next_states:
+                G.add_edge(current_state, s)
+                if not s in visited:
+                    queue.append(s)
+                    visited.add(s)
+        
+        G.calculate_g_function()
+        return G
+
+class Grundy():
+
+    def __init__(self, pile_size):
+        self.piles = (pile_size,)
+        self.current_state = self.piles
+
+    def get_next_states(self, state=-1):
+        if state == -1:
+            state = self.current_state
+        
+        next_states = set()
+        state = list(state)
+
+        for pile in range(len(state)):
+            pile_size = state[pile]
+            if pile_size > 2:
+                for move in range(1,math.ceil(pile_size/2)):
+                    new_state = state[:]
+                    new_state[pile] -= move
+                    new_state.append(move)
+                    next_states.add(tuple(sorted(new_state))) 
+
+        return next_states
+        
+    def generate_graph(self):
+        G = Graph()
+        queue = []
+        visited = set()
+        queue.append(self.piles)
+        visited.add(self.piles)
+
+        while queue:
+            current_state = queue.pop(0)
+            next_states = self.get_next_states(current_state)
+
+            for s in next_states:
+                G.add_edge(current_state, s)
+                if not s in visited:
+                    queue.append(s)
+                    visited.add(s)
+        
+        G.calculate_g_function()
+        return G
+
 if __name__ == '__main__':
-    game = Nim(tuple([21]), tuple([{1,2,3}]))
-    game.print_game()
+    game = Grundy(6)
 
     game_graph = game.generate_graph()
+    game_graph.visualize()
+    
+#    game2 = Kayles(10)
+#
+#    game2_graph = game2.generate_graph()
+#
+#    game2_graph.visualize()
+    #game_graph.print_graph()
 
-    game_graph.print_graph()
-
-    P = []
-    N = []
-
-    for v in game_graph.vertices:
-        if game_graph.g_function[v] == 0:
-            P.append(v)
-        else:
-            N.append(v)
-
-    print(sorted(P))
-    print(sorted(N))
+#    P = []
+#    N = []
+#
+#    for v in game_graph.vertices:
+#        if game_graph.g_function[v] == 0:
+#            P.append(v)
+#        else:
+#            N.append(v)
+#    print("")
+#    print(sorted(N))
+#    print("")
+#    print(sorted(P))
+#
+#    print((100,100,100) in P)
 
 
