@@ -131,17 +131,37 @@ class Graph():
 if __name__ == '__main__':
     G = Graph()
 
-    G.add_edge(0, 2)
-    G.add_edge(0, 1)
-    G.add_edge(1, 2)
-    G.add_edge(2, 3)
-    G.add_edge(3, 4)
-    G.add_edge(2,5)
+    G.add_edge(1,2)
+    G.add_edge(1,4)
+    G.add_edge(1,5)
+    G.add_edge(4,9)
+    G.add_edge(4,5)
+    G.add_edge(10,9)
+    G.add_edge(5,10)
+    G.add_edge(9,13)
+    G.add_edge(10,13)
+    G.add_edge(5,6)
+    G.add_edge(6,13)
+    G.add_edge(6,14)
+    G.add_edge(6,11)
+    G.add_edge(13,14)
+    G.add_edge(2,6)
+    G.add_edge(2,11)
+    G.add_edge(11,14)
+    G.add_edge(2,3)
+    G.add_edge(2,7)
+    G.add_edge(7,11)
+    G.add_edge(7,8)
+    G.add_edge(11,12)
+    G.add_edge(14,15)
 
     G.calculate_g_function()
 
     G.print_graph()
 
     G.visualize()
+
+    for v in sorted(G.vertices):
+        print(str(v), ":", str(G.g_function[v]))
 
 

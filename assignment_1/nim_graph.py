@@ -39,9 +39,10 @@ class Nim():
                     subtraction_set = set(list(range(bottom_val, pile_size+1)))
                 elif self.subtraction_sets[pile_index] == 2:
                     if pile_size % 2 == 1:
-                        subtraction_set = {pile_size}
+                        subtraction_set = set(list(range(1,pile_size,2)))
+                        subtraction_set.add(pile_size)
                     else:
-                        subtraction_set = set(list(range(2, pile_size+1, 2)))
+                        subtraction_set = set(list(range(2, pile_size, 2)))
                 elif isinstance(self.subtraction_sets[pile_index], set):
                     subtraction_set = []
                     for s in self.subtraction_sets[pile_index]:
@@ -239,11 +240,13 @@ class Grundy():
         return G
 
 if __name__ == '__main__':
-    game = Grundy(6)
+    game = Nim((100,100,100), (1,2,{1,3,5,7}) )
 
     game_graph = game.generate_graph()
-    game_graph.visualize()
-    
+    #game_graph.visualize()
+
+    for v in game_graph.vertices[(100,100,100)]:
+        print(str(v), ":", str(game_graph.g_function[v]))
 #    game2 = Kayles(10)
 #
 #    game2_graph = game2.generate_graph()

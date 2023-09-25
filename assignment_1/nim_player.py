@@ -35,9 +35,9 @@ def nim_player(piles):
     return tuple(piles)
 
 if __name__ == "__main__":
-    piles = (100, 100, 101, 50, 25, 100, 43)
+    piles = (100, 100, 100)
     round = 0
-    while not(piles == (0,0,0,0,0,0,0)):
+    while not(piles == (0,0,0)):
         print("Round:", math.floor((round)/2) + 1, "Player:", round % 2 + 1)
         print(piles)
         piles = nim_player(piles)
